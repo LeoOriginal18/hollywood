@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐶 LeBron — Comandos da Hollywood</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── VARIÁVEIS ─────────────────────────────────── */
+  :root {
+    --bg:       #0d0d0f;
+    --surface:  #141418;
+    --border:   #222228;
+    --gold:     #c9a84c;
+    --gold-dim: #7a6030;
+    --text:     #e8e6e0;
+    --muted:    #6b6860;
+    --admin:    #4c7ac9;
+    --pv:       #4cc97a;
+    --tag-bg:   #1a1a20;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── NOISE OVERLAY ─────────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.5;
+  }
+
+  /* ── HEADER ────────────────────────────────────── */
+  header {
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 50%;
+    transform: translateX(-50%);
+    width: 200px; height: 2px;
+    background: var(--gold);
+  }
+
+  .header-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 span { color: var(--gold); }
+
+  .header-sub {
+    color: var(--muted);
+    font-size: 14px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── SEARCH ────────────────────────────────────── */
+  .search-wrap {
+    max-width: 500px;
+    margin: 2rem auto 0;
+    position: relative;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input:focus { border-color: var(--gold-dim); }
+  .search-wrap input::placeholder { color: var(--muted); }
+
+  .search-icon {
+    position: absolute;
+    left: 0.9rem; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  /* ── LAYOUT ────────────────────────────────────── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    position: relative; z-index: 1;
+  }
+
+  /* ── STATS BAR ─────────────────────────────────── */
+  .stats {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .stat strong { color: var(--text); font-size: 16px; }
+
+  /* ── SECTION ───────────────────────────────────── */
+  .section { margin-bottom: 3rem; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2px 8px;
+  }
+
+  /* ── COMMAND GRID ──────────────────────────────── */
+  .cmd-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .cmd-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    transition: border-color 0.15s, transform 0.15s;
+    cursor: default;
+  }
+
+  .cmd-card:hover {
+    border-color: var(--gold-dim);
+    transform: translateY(-1px);
+  }
+
+  .cmd-card.hidden { display: none; }
+
+  .cmd-top {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .cmd-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gold);
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+
+  .tag-admin { color: var(--admin); border-color: var(--admin); background: rgba(76,122,201,0.08); }
+  .tag-pv    { color: var(--pv);    border-color: var(--pv);    background: rgba(76,201,122,0.08); }
+  .tag-db    { color: var(--gold);  border-color: var(--gold-dim); background: rgba(201,168,76,0.08); }
+
+  .cmd-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ── CUSTOM COMMANDS SECTION ───────────────────── */
+  .custom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .custom-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold-dim);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .custom-trigger {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+  }
+
+  .custom-response {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .custom-by {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #3a3a40;
+    margin-top: 0.2rem;
+  }
+
+  /* ── LOADING / ERROR ───────────────────────────── */
+  .loading, .empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+  }
+
+  .dot-anim::after {
+    content: '';
+    animation: dots 1.2s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0%   { content: ''; }
+    25%  { content: '.'; }
+    50%  { content: '..'; }
+    75%  { content: '...'; }
+  }
+
+  /* ── LEGEND ────────────────────────────────────── */
+  .legend {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── FOOTER ────────────────────────────────────── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    position: relative; z-index: 1;
+  }
+
+  /* ── RESPONSIVE ────────────────────────────────── */
+  @media (max-width: 600px) {
+    .cmd-grid, .custom-grid { grid-template-columns: 1fr; }
+    .stats { gap: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">Rede Brazink · Canal #Hollywood</div>
+  <h1>🐶 Le<span>Bron</span></h1>
+  <p class="header-sub">Lista de comandos disponíveis</p>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder="Buscar comando..." autocomplete="off">
+  </div>
+</header>
+
+<main>
+  <div class="stats" id="stats">
+    <div class="stat">Carregando<span class="dot-anim"></span></div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="tag tag-admin">admin</span> Apenas admins autorizados</div>
+    <div class="legend-item"><span class="tag tag-pv">PV</span> Via mensagem privada</div>
+    <div class="legend-item"><span class="tag tag-db">banco</span> Frase aleatória do banco</div>
+  </div>
+
+  <!-- COMANDOS FIXOS -->
+  <div class="section" id="sec-diversao">
+    <div class="section-header">
+      <span class="section-title">🎉 Diversão</span>
+      <span class="section-count" id="cnt-diversao">—</span>
+    </div>
+    <div class="cmd-grid" id="grid-diversao"></div>
+  </div>
+
+  <div class="section" id="sec-radio">
+    <div class="section-header">
+      <span class="section-title">📻 Rádio</span>
+      <span class="section-count" id="cnt-radio">—</span>
+    </div>
+    <div class="cmd-grid" id="grid-radio"></div>
+  </div>
+
+  <div class="section" id="sec-admin">
+    <div class="section-header">
+      <span class="section-title">⚙️ Administração</span>
+      <span class="section-count" id="cnt-admin">—</span>
+    </div>
+    <div class="cmd-grid" id="grid-admin"></div>
+  </div>
+
+  <!-- COMANDOS CUSTOMIZADOS (Supabase) -->
+  <div class="section" id="sec-custom">
+    <div class="section-header">
+      <span class="section-title">✨ Comandos Customizados</span>
+      <span class="section-count" id="cnt-custom">—</span>
+    </div>
+    <div class="custom-grid" id="grid-custom">
+      <div class="loading dot-anim">Carregando do banco de dados</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  LeBron IRC Bot &bull; #Hollywood &bull; Rede Brazink
+</footer>
+
+<script>
+// ════════════════════════════════════════════════
+//  ⚙️  CONFIGURAÇÃO — só mexa aqui
+// ════════════════════════════════════════════════
+const SUPABASE_URL = "https://ozycnoaixffetyxbnxgw.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96eWNub2FpeGZmZXR5eGJueGd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5Mzg5OTksImV4cCI6MjA4NDUxNDk5OX0.5v5J_ujbzBF8aMWxhgpM1tzwOIMmnEM4GLgUzdIxO_c";
+// ════════════════════════════════════════════════
+
+// ── Comandos fixos do bot ─────────────────────
+const FIXED_COMMANDS = {
+  diversao: [
+    { cmd: "!ajuda / !ajuda2 / !ajuda3", desc: "Exibe os menus de comandos disponíveis" },
+    { cmd: "!pet / !carinho",            desc: "O bot reage com carinho a quem digitou" },
+    { cmd: "!fofoca [nick1] [nick2]",    desc: "Conta uma fofoca aleatória do banco", db: true },
+    { cmd: "!desmotiva",                 desc: "Frase desmotivacional aleatória do banco", db: true },
+    { cmd: "!sos",                       desc: "Mensagem motivacional aleatória do banco", db: true },
+    { cmd: "!dado",                      desc: "Rola um dado de 6 lados 🎲" },
+    { cmd: "!cupido nick1 nick2",        desc: "Calcula compatibilidade amorosa em %" },
+    { cmd: "!atacar [nick]",             desc: "Bot ataca alguém de forma cômica 🐕" },
+    { cmd: "!cerveja [nick]",            desc: "Paga uma cerveja para o nick citado 🍺" },
+    { cmd: "!canta",                     desc: "Simula o usuário cantando a música atual 🎤" },
+    { cmd: "!toca [música]",             desc: "Implora pro DJ tocar uma música" },
+    { cmd: "!vaza [nick]",               desc: "Simula um kick cômico" },
+    { cmd: "!banir [nick]",              desc: "Simula um ban cômico ⛔" },
+    { cmd: "!parabens [nick]",           desc: "Manda parabéns para alguém 🎉" },
+    { cmd: "!ping",                      desc: "Testa se o bot está respondendo" },
+    { cmd: "!bola",                      desc: "Bot busca bolinha e volta com graveto 🥎" },
+    { cmd: "!sossega [nick]",            desc: "Pede para alguém sossegar" },
+    { cmd: "!perdido / !perdida",        desc: "Diz que está perdido no chat 🥴" },
+    { cmd: "!tata",                      desc: "Tá, tá, tá, tá!!!!!!!!" },
+  ],
+  radio: [
+    { cmd: "!valeudj [nick]",            desc: "Agradece o DJ com mensagem aleatória 🎧" },
+    { cmd: "!djtop [nick]",              desc: "Elogia a programação do DJ" },
+    { cmd: "!boteco [nick]",             desc: "Comenta o programa Boteco do DJ" },
+    { cmd: "!boa [nick]",                desc: "Declara a música como boa pedida 👏" },
+    { cmd: "!hino [nick]",               desc: "Declara a música como hino 🚨" },
+    { cmd: "!10 [nick]",                 desc: "Dá nota 10 para a música 🔟" },
+    { cmd: "!mito [nick]",               desc: "Chama alguém de mito pela pedida 🏆" },
+    { cmd: "!top",                       desc: "Declara a música como TOP DAS GALÁXIAS 🔝" },
+    { cmd: "!recado [nick]",             desc: "Diz que a música é um recado para alguém 👀" },
+    { cmd: "!musica [nick]",             desc: "Avisa que a música é um pedido de alguém 📢" },
+    { cmd: "!horah",                     desc: "Anuncia abertura do HoraH (rock) 🎸" },
+    { cmd: "!lovehood",                  desc: "Anuncia o LoveHood 😪" },
+    { cmd: "!dose",                      desc: "Anuncia o programa Primeira Dose ☕" },
+    { cmd: "!original / !pagoleo",       desc: "Pede o horóscopo 🌟" },
+    { cmd: "!urso",                      desc: "Anuncia o Café com Urso 🐻" },
+    { cmd: "!play",                      desc: "Anuncia o Aperte o Play 💃" },
+    { cmd: "!botox",                     desc: "Lança enquete sobre botox 💉" },
+    { cmd: "!incluir Artista - Música",  desc: "Pede inclusão de música na rádio (PV)", pv: true },
+    { cmd: "!pendentes",                 desc: "Lista seus pedidos pendentes (PV)", pv: true },
+  ],
+  admin: [
+    { cmd: "!inclusoes",                          desc: "Lista todos os pedidos pendentes (PV)", admin: true, pv: true },
+    { cmd: "!incluso #ID",                        desc: "Marca pedido como concluído (PV)", admin: true, pv: true },
+    { cmd: "!topmusicas",                         desc: "Top 10 músicas mais pedidas no mês", admin: true },
+    { cmd: "!toplikes",                           desc: "Top 10 músicas mais curtidas no mês", admin: true },
+    { cmd: "!comunicar [horas] [min] Texto",      desc: "Agenda comunicado automático no canal", admin: true },
+    { cmd: "!listcomunicar",                      desc: "Lista comunicados ativos com IDs", admin: true },
+    { cmd: "!delcomunicar [ID]",                  desc: "Remove um comunicado pelo ID", admin: true },
+    { cmd: "!saudacao + NICK Mensagem",           desc: "Define saudação personalizada para um nick", admin: true },
+    { cmd: "!saudacao - NICK",                    desc: "Remove saudação de um nick", admin: true },
+    { cmd: "!dev comando + !trigger Resposta",    desc: "Cria ou atualiza comando customizado", admin: true },
+    { cmd: "!dev comando - !trigger",             desc: "Remove um comando customizado", admin: true },
+  ]
+};
+
+// ── Renderiza card fixo ───────────────────────
+function makeCard(item) {
+  const tags = [
+    item.admin ? '<span class="tag tag-admin">admin</span>' : '',
+    item.pv    ? '<span class="tag tag-pv">PV</span>'       : '',
+    item.db    ? '<span class="tag tag-db">banco</span>'    : '',
+  ].join('');
+  return `
+    <div class="cmd-card" data-search="${item.cmd.toLowerCase()} ${item.desc.toLowerCase()}">
+      <div class="cmd-top">
+        <span class="cmd-name">${item.cmd}</span>${tags}
+      </div>
+      <div class="cmd-desc">${item.desc}</div>
+    </div>`;
+}
+
+// ── Preenche seções fixas ─────────────────────
+function renderFixed() {
+  ['diversao','radio','admin'].forEach(sec => {
+    const items = FIXED_COMMANDS[sec];
+    document.getElementById(`grid-${sec}`).innerHTML = items.map(makeCard).join('');
+    document.getElementById(`cnt-${sec}`).textContent = items.length;
+  });
+}
+
+// ── Busca comandos customizados do Supabase ───
+async function loadCustomCommands() {
+  const grid = document.getElementById('grid-custom');
+  const cnt  = document.getElementById('cnt-custom');
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/custom_commands?select=trigger,response,added_by&order=trigger`,
+      { headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json'
+      }}
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    cnt.textContent = data.length;
+
+    if (!data.length) {
+      grid.innerHTML = '<div class="empty">Nenhum comando customizado cadastrado ainda.</div>';
+      return;
+    }
+
+    grid.innerHTML = data.map(c => `
+      <div class="cmd-card custom-card" data-search="${c.trigger.toLowerCase()} ${c.response.toLowerCase()}">
+        <div class="custom-trigger">${c.trigger}</div>
+        <div class="custom-response">${c.response}</div>
+        ${c.added_by ? `<div class="custom-by">por ${c.added_by}</div>` : ''}
+      </div>`).join('');
+
+  } catch(e) {
+    grid.innerHTML = `<div class="empty">Erro ao carregar do banco: ${e.message}</div>`;
+    cnt.textContent = '!';
+  }
+}
+
+// ── Stats bar ─────────────────────────────────
+function renderStats() {
+  const total =
+    FIXED_COMMANDS.diversao.length +
+    FIXED_COMMANDS.radio.length +
+    FIXED_COMMANDS.admin.length;
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><strong>${total}</strong> comandos fixos</div>
+    <div class="stat"><strong id="stat-custom">—</strong> comandos customizados</div>
+    <div class="stat">🌐 irc.brazink.net · #hollywood</div>`;
+}
+
+// ── Busca ─────────────────────────────────────
+document.getElementById('search').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  document.querySelectorAll('.cmd-card').forEach(card => {
+    const match = !q || card.dataset.search.includes(q);
+    card.classList.toggle('hidden', !match);
+  });
+  // Atualiza counts visíveis
+  ['diversao','radio','admin'].forEach(sec => {
+    const visible = document.querySelectorAll(`#grid-${sec} .cmd-card:not(.hidden)`).length;
+    document.getElementById(`cnt-${sec}`).textContent = q ? `${visible} encontrado(s)` :
+      FIXED_COMMANDS[sec].length;
+  });
+});
+
+// ── Init ──────────────────────────────────────
+renderFixed();
+renderStats();
+loadCustomCommands().then(() => {
+  const el = document.getElementById('stat-custom');
+  if (el) el.textContent = document.querySelectorAll('#grid-custom .cmd-card').length;
+});
+</script>
+</body>
+</html>
