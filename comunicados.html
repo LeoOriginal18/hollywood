@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📢 Comunicados — Hollywood</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0d0d0f;
+    --surface:  #141418;
+    --border:   #222228;
+    --gold:     #c9a84c;
+    --gold-dim: #7a6030;
+    --text:     #e8e6e0;
+    --muted:    #6b6860;
+    --active:   #4cc97a;
+    --expired:  #c94c4c;
+    --tag-bg:   #1a1a20;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.5;
+  }
+
+  /* ── HEADER ────────────────────────────────── */
+  header {
+    position: relative; z-index: 1;
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 50%;
+    transform: translateX(-50%);
+    width: 200px; height: 2px;
+    background: var(--gold);
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.6rem;
+  }
+
+  h1 span { color: var(--gold); }
+
+  .header-sub {
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── CONTROLS ──────────────────────────────── */
+  .controls {
+    max-width: 860px;
+    margin: 1.5rem auto 0;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .filter-group {
+    display: flex;
+    gap: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px;
+  }
+
+  .filter-btn {
+    background: none;
+    border: none;
+    border-radius: 6px;
+    padding: 0.4rem 0.9rem;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .filter-btn.active { background: var(--border); color: var(--text); }
+
+  /* ── MAIN ──────────────────────────────────── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    position: relative; z-index: 1;
+  }
+
+  /* ── STATS ─────────────────────────────────── */
+  .stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.55rem 1.1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .stat strong { color: var(--text); font-size: 15px; }
+  .stat.act strong { color: var(--active); }
+  .stat.exp strong { color: var(--expired); }
+
+  /* ── NOTICE CARD ───────────────────────────── */
+  .notice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .notice-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    gap: 1rem;
+    transition: border-color 0.15s;
+  }
+
+  .notice-card.is-active  { border-left-color: var(--active); }
+  .notice-card.is-expired { border-left-color: var(--expired); opacity: 0.6; }
+  .notice-card.hidden { display: none; }
+
+  .notice-id {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 8px;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  .notice-info { min-width: 0; }
+
+  .notice-msg {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 0.4rem;
+  }
+
+  .notice-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .notice-right { text-align: right; flex-shrink: 0; }
+
+  .status-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+
+  .badge-active  { color: var(--active);  border-color: var(--active);  background: rgba(76,201,122,0.08); }
+  .badge-expired { color: var(--expired); border-color: var(--expired); background: rgba(201,76,76,0.08); }
+
+  /* ── INSTRUÇÕES ────────────────────────────── */
+  .instructions {
+    margin-top: 3rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .instr-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.4rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .instr-body { padding: 1.4rem; }
+
+  .instr-block { margin-bottom: 1.8rem; }
+  .instr-block:last-child { margin-bottom: 0; }
+
+  .instr-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+
+  .instr-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+    line-height: 1.5;
+  }
+
+  .code-block {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    line-height: 1.7;
+  }
+
+  .code-block .comment {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .param {
+    display: inline-block;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--gold-dim);
+    border-radius: 4px;
+    padding: 0 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    margin: 2px 2px;
+  }
+
+  .params-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.6rem;
+    font-size: 12px;
+  }
+
+  .params-table td {
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .params-table td:first-child {
+    font-family: 'DM Mono', monospace;
+    color: var(--gold);
+    white-space: nowrap;
+    width: 30%;
+  }
+
+  .params-table td:last-child { color: var(--muted); }
+  .params-table tr:last-child td { border-bottom: none; }
+
+  /* ── ESTADO ────────────────────────────────── */
+  .state-msg {
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+  }
+
+  .dot-anim::after {
+    content: '';
+    animation: dots 1.2s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0%  { content: ''; }
+    25% { content: '.'; }
+    50% { content: '..'; }
+    75% { content: '...'; }
+  }
+
+  /* ── NAV ───────────────────────────────────── */
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--gold-dim);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .nav-link:hover { color: var(--gold); }
+
+  /* ── FOOTER ────────────────────────────────── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    position: relative; z-index: 1;
+  }
+
+  @media (max-width: 600px) {
+    .notice-card { grid-template-columns: 1fr; }
+    .notice-id { display: inline-block; margin-bottom: 0.4rem; }
+    .notice-right { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Rede Brazink · Canal #Hollywood</div>
+  <h1>📢 <span>Comunicados</span></h1>
+  <p class="header-sub">Avisos automáticos agendados no canal</p>
+
+  <div class="controls">
+    <div class="filter-group">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <button class="filter-btn" data-filter="1">Ativos</button>
+      <button class="filter-btn" data-filter="0">Inativos</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="stats" id="stats">
+    <div class="stat"><span class="dot-anim">Carregando</span></div>
+  </div>
+
+  <div class="notice-list" id="list">
+    <div class="state-msg dot-anim">Carregando comunicados</div>
+  </div>
+
+  <!-- ── INSTRUÇÕES ── -->
+  <div class="instructions">
+    <div class="instr-header">⚙️ Como gerenciar comunicados pelo IRC</div>
+    <div class="instr-body">
+
+      <div class="instr-block">
+        <div class="instr-title">➕ Adicionar um comunicado</div>
+        <div class="instr-desc">
+          Digite no canal (apenas admins autorizados):
+        </div>
+        <div class="code-block">
+          !comunicar [horas] [minutos] Mensagem aqui<br>
+          <span class="comment">-- horas = por quanto tempo ficará ativo (0 = eterno)</span><br>
+          <span class="comment">-- minutos = intervalo entre cada envio</span>
+        </div>
+        <table class="params-table" style="margin-top:0.8rem">
+          <tr>
+            <td><span class="param">[horas]</span></td>
+            <td>Duração em horas. Use <strong>0</strong> para comunicado sem prazo de expiração.</td>
+          </tr>
+          <tr>
+            <td><span class="param">[minutos]</span></td>
+            <td>A cada quantos minutos o bot repete a mensagem no canal. Mínimo: 1.</td>
+          </tr>
+          <tr>
+            <td><span class="param">Mensagem</span></td>
+            <td>O texto que será enviado. Pode conter emojis.</td>
+          </tr>
+        </table>
+        <div class="code-block" style="margin-top:0.8rem">
+          <span class="comment">-- Exemplos:</span><br>
+          !comunicar 0 30 🎶 Fila de pedidos aberta! Use !incluir no PV.<br>
+          !comunicar 2 15 ⚠️ Manutenção em 2 horas. Aproveitem!
+        </div>
+      </div>
+
+      <div class="instr-block">
+        <div class="instr-title">📋 Listar comunicados ativos</div>
+        <div class="instr-desc">
+          Mostra todos os comunicados com seus IDs diretamente no canal:
+        </div>
+        <div class="code-block">!listcomunicar</div>
+        <div class="instr-desc" style="margin-top:0.6rem">
+          O ID aparece na primeira coluna desta página e também na resposta do <strong>!listcomunicar</strong>.
+          Use esse ID para remover o comunicado.
+        </div>
+      </div>
+
+      <div class="instr-block">
+        <div class="instr-title">🗑️ Remover um comunicado</div>
+        <div class="instr-desc">
+          Use o ID exibido nesta página ou no <strong>!listcomunicar</strong>:
+        </div>
+        <div class="code-block">
+          !delcomunicar [ID]<br>
+          <span class="comment">-- Exemplo:</span><br>
+          !delcomunicar 7
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">← Comandos do bot</a>
+    <a href="pedidos.html" class="nav-link">← Pedidos de música</a>
+  </div>
+</main>
+
+<footer>
+  LeBron IRC Bot &bull; #Hollywood &bull; Rede Brazink
+</footer>
+
+<script>
+// ════════════════════════════════════════════════
+//  ⚙️  CONFIGURAÇÃO — só mexa aqui
+// ════════════════════════════════════════════════
+const SUPABASE_URL = "https://ozycnoaixffetyxbnxgw.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96eWNub2FpeGZmZXR5eGJueGd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5Mzg5OTksImV4cCI6MjA4NDUxNDk5OX0.5v5J_ujbzBF8aMWxhgpM1tzwOIMmnEM4GLgUzdIxO_c";
+// ════════════════════════════════════════════════
+
+let activeFilter = 'all';
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'2-digit' })
+       + ' ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+}
+
+function isExpired(notice) {
+  if (!notice.active) return true;
+  if (notice.expires_at) {
+    return new Date(notice.expires_at) < new Date();
+  }
+  return false;
+}
+
+function renderStats(data) {
+  const total   = data.length;
+  const ativos  = data.filter(d => !isExpired(d)).length;
+  const inativos = total - ativos;
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><strong>${total}</strong> total</div>
+    <div class="stat act"><strong>${ativos}</strong> ativos</div>
+    <div class="stat exp"><strong>${inativos}</strong> inativos</div>`;
+}
+
+function renderList(data) {
+  const list = document.getElementById('list');
+  if (!data.length) {
+    list.innerHTML = '<div class="state-msg">Nenhum comunicado encontrado.</div>';
+    return;
+  }
+
+  list.innerHTML = data.map(n => {
+    const expired = isExpired(n);
+    const cardClass = expired ? 'is-expired' : 'is-active';
+    const badge = expired
+      ? '<span class="status-badge badge-expired">inativo</span>'
+      : '<span class="status-badge badge-active">ativo</span>';
+
+    const prazo = n.expires_at
+      ? `expira ${fmtDate(n.expires_at)}`
+      : 'sem prazo';
+
+    const lastSent = n.last_sent_at
+      ? `último envio ${fmtDate(n.last_sent_at)}`
+      : 'nunca enviado';
+
+    const filterVal = expired ? '0' : '1';
+
+    return `
+      <div class="notice-card ${cardClass}" data-filter="${filterVal}">
+        <div class="notice-id">#${n.id}</div>
+        <div class="notice-info">
+          <div class="notice-msg">${n.message}</div>
+          <div class="notice-meta">
+            <span>🔁 a cada ${n.interval_minutes} min</span>
+            <span>📅 ${prazo}</span>
+            <span>📤 ${lastSent}</span>
+            ${n.created_by ? `<span>👤 ${n.created_by}</span>` : ''}
+          </div>
+        </div>
+        <div class="notice-right">
+          ${badge}
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px">
+            criado ${fmtDate(n.created_at)}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function applyFilter() {
+  document.querySelectorAll('.notice-card').forEach(card => {
+    const match = activeFilter === 'all' || card.dataset.filter === activeFilter;
+    card.classList.toggle('hidden', !match);
+  });
+}
+
+async function load() {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/notices?select=*&order=id.desc`,
+      { headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json'
+      }}
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    renderStats(data);
+    renderList(data);
+  } catch(e) {
+    document.getElementById('list').innerHTML =
+      `<div class="state-msg">Erro ao carregar: ${e.message}</div>`;
+    document.getElementById('stats').innerHTML =
+      `<div class="stat">Erro ao conectar ao banco</div>`;
+  }
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    activeFilter = this.dataset.filter;
+    applyFilter();
+  });
+});
+
+load();
+</script>
+</body>
+</html>
